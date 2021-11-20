@@ -82,6 +82,12 @@ CMakeFiles/5821.dir/RenderController.cpp.o
  /Users/wangyu/Desktop/利兹上课资料/9月份学期/图形学两门课/5821/作业2/5821研究/RenderParameters.h
  /Users/wangyu/Desktop/利兹上课资料/9月份学期/图形学两门课/5821/作业2/5821研究/RenderWidget.h
  /Users/wangyu/Desktop/利兹上课资料/9月份学期/图形学两门课/5821/作业2/5821研究/RenderWindow.h
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtGui.framework/Headers/QMouseEvent
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtGui.framework/Headers/qevent.h
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtGui.framework/QtGui
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtWidgets.framework/Headers/QOpenGLWidget
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtWidgets.framework/Headers/qopenglwidget.h
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtWidgets.framework/QtWidgets
 CMakeFiles/5821.dir/RenderWidget.cpp.o
  /Users/wangyu/Desktop/利兹上课资料/9月份学期/图形学两门课/5821/作业2/5821研究/AttributedObject.h
  /Users/wangyu/Desktop/利兹上课资料/9月份学期/图形学两门课/5821/作业2/5821研究/Cartesian3.h
@@ -91,6 +97,10 @@ CMakeFiles/5821.dir/RenderWidget.cpp.o
  /Users/wangyu/Desktop/利兹上课资料/9月份学期/图形学两门课/5821/作业2/5821研究/RenderParameters.h
  /Users/wangyu/Desktop/利兹上课资料/9月份学期/图形学两门课/5821/作业2/5821研究/RenderWidget.cpp
  /Users/wangyu/Desktop/利兹上课资料/9月份学期/图形学两门课/5821/作业2/5821研究/RenderWidget.h
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtGui.framework/Headers/QMouseEvent
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtGui.framework/Headers/qevent.h
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtWidgets.framework/Headers/QOpenGLWidget
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtWidgets.framework/Headers/qopenglwidget.h
 CMakeFiles/5821.dir/RenderWindow.cpp.o
  /Users/wangyu/Desktop/利兹上课资料/9月份学期/图形学两门课/5821/作业2/5821研究/ArcBall.h
  /Users/wangyu/Desktop/利兹上课资料/9月份学期/图形学两门课/5821/作业2/5821研究/ArcBallWidget.h
@@ -103,6 +113,11 @@ CMakeFiles/5821.dir/RenderWindow.cpp.o
  /Users/wangyu/Desktop/利兹上课资料/9月份学期/图形学两门课/5821/作业2/5821研究/RenderWidget.h
  /Users/wangyu/Desktop/利兹上课资料/9月份学期/图形学两门课/5821/作业2/5821研究/RenderWindow.cpp
  /Users/wangyu/Desktop/利兹上课资料/9月份学期/图形学两门课/5821/作业2/5821研究/RenderWindow.h
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtGui.framework/Headers/QMouseEvent
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtGui.framework/Headers/qevent.h
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtWidgets.framework/Headers/QOpenGLWidget
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtWidgets.framework/Headers/qopenglwidget.h
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtWidgets.framework/QtWidgets
 CMakeFiles/5821.dir/main.cpp.o
  /Users/wangyu/Desktop/利兹上课资料/9月份学期/图形学两门课/5821/作业2/5821研究/ArcBall.h
  /Users/wangyu/Desktop/利兹上课资料/9月份学期/图形学两门课/5821/作业2/5821研究/ArcBallWidget.h

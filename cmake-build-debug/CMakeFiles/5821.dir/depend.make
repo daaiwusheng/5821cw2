@@ -81,7 +81,13 @@ CMakeFiles/5821.dir/RenderController.cpp.o: \
  ../RenderController.h \
  ../RenderParameters.h \
  ../RenderWidget.h \
- ../RenderWindow.h
+ ../RenderWindow.h \
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtGui.framework/Headers/QMouseEvent \
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtGui.framework/Headers/qevent.h \
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtGui.framework/QtGui \
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtWidgets.framework/Headers/QOpenGLWidget \
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtWidgets.framework/Headers/qopenglwidget.h \
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtWidgets.framework/QtWidgets
 CMakeFiles/5821.dir/RenderWidget.cpp.o: \
  ../AttributedObject.h \
  ../Cartesian3.h \
@@ -90,7 +96,11 @@ CMakeFiles/5821.dir/RenderWidget.cpp.o: \
  ../Quaternion.h \
  ../RenderParameters.h \
  ../RenderWidget.cpp \
- ../RenderWidget.h
+ ../RenderWidget.h \
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtGui.framework/Headers/QMouseEvent \
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtGui.framework/Headers/qevent.h \
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtWidgets.framework/Headers/QOpenGLWidget \
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtWidgets.framework/Headers/qopenglwidget.h
 CMakeFiles/5821.dir/RenderWindow.cpp.o: \
  ../ArcBall.h \
  ../ArcBallWidget.h \
@@ -102,7 +112,12 @@ CMakeFiles/5821.dir/RenderWindow.cpp.o: \
  ../RenderParameters.h \
  ../RenderWidget.h \
  ../RenderWindow.cpp \
- ../RenderWindow.h
+ ../RenderWindow.h \
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtGui.framework/Headers/QMouseEvent \
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtGui.framework/Headers/qevent.h \
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtWidgets.framework/Headers/QOpenGLWidget \
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtWidgets.framework/Headers/qopenglwidget.h \
+ /usr/local/Cellar/qt@5/5.15.2/lib/QtWidgets.framework/QtWidgets
 CMakeFiles/5821.dir/main.cpp.o: \
  ../ArcBall.h \
  ../ArcBallWidget.h \

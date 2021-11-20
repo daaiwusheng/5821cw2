@@ -88,7 +88,8 @@ class AttributedObject
 
     // write routine
     void WriteObjectStream(std::ostream &geometryStream);
-
+    // 输出texture
+    void generateTexture();
     // routine to render
     void Render(RenderParameters *renderParameters);
     }; // class AttributedObject

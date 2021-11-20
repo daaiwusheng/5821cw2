@@ -30,13 +30,17 @@
 #include <iomanip>
 #include <sstream>
 #include <string>
-
+#include <deque>
+#include <fstream>
+#include <algorithm>
 // include the Cartesian 3- vector class
 #include "Cartesian3.h"
 
 #define MAXIMUM_LINE_LENGTH 1024
 #define REMAP_TO_UNIT_INTERVAL(x) (0.5 + (0.5*(x)))
 #define REMAP_FROM_UNIT_INTERVAL(x) (-1.0 + (2.0*(x)))
+using namespace std;
+const int MAP_SIZE = 200;
 
 // constructor will initialise to safe values
 AttributedObject::AttributedObject()
@@ -209,6 +213,146 @@ bool AttributedObject::ReadObjectStream(std::istream &geometryStream)
     // return a success code
     return true;
 	} // ReadObjectStream()
+//生成texture
+void AttributedObject::generateTexture() {
+    unsigned int numFaces = faceVertices.size();
+    Cartesian3 textureMap[MAP_SIZE][MAP_SIZE];
+    for (unsigned int face = 0; face < numFaces; face+=3){
+        std::deque<Cartesian3> triangleTexture = std::deque<Cartesian3>();
+        std::deque<Cartesian3> triangleNormal = std::deque<Cartesian3>();
+        std::deque<Cartesian3> triangleVertex = std::deque<Cartesian3>();
+        std::deque<Cartesian3> triangleColour = std::deque<Cartesian3>();
+        for (unsigned int vertex = 0; vertex < 3; vertex++){
+            int indexTextureCoordinate = faceTexCoords[face + vertex];
+            //映射到纹理坐标系,交换u v,
+            Cartesian3 currentTexCoords = textureCoords[indexTextureCoordinate];
+            Cartesian3 trueTexCoords = Cartesian3(currentTexCoords.y, currentTexCoords.x, currentTexCoords.z);
+            triangleTexture.push_back(trueTexCoords);
+            int indexNormal = faceNormals[face + vertex];
+            triangleNormal.push_back(normals[indexNormal]);
+            int indexVertex = faceVertices[face + vertex];
+            triangleVertex.push_back(vertices[indexVertex]);
+            int indexColour = faceColours[face + vertex];
+            triangleColour.push_back(colours[indexColour]);
+        }
+
+        Cartesian3 textureCoordTransformed0 = triangleTexture.front();
+        textureCoordTransformed0.x = textureCoordTransformed0.x * MAP_SIZE;
+        textureCoordTransformed0.y = textureCoordTransformed0.y * MAP_SIZE;
+        triangleTexture.pop_front();
+        Cartesian3 textureCoordTransformed1 = triangleTexture.front();
+        textureCoordTransformed1.x = textureCoordTransformed1.x * MAP_SIZE;
+        textureCoordTransformed1.y = textureCoordTransformed1.y * MAP_SIZE;
+        triangleTexture.pop_front();
+        Cartesian3 textureCoordTransformed2 = triangleTexture.front();
+        textureCoordTransformed2.x = textureCoordTransformed2.x * MAP_SIZE;
+        textureCoordTransformed2.y = textureCoordTransformed2.y * MAP_SIZE;
+        triangleTexture.pop_front();
+        float minX = MAP_SIZE, maxX = 0.0;
+        float minY = MAP_SIZE, maxY = 0.0;
+
+        // test against all vertices
+        if (textureCoordTransformed0.x < minX) minX = textureCoordTransformed0.x;
+        if (textureCoordTransformed0.x > maxX) maxX = textureCoordTransformed0.x;
+        if (textureCoordTransformed0.y < minY) minY = textureCoordTransformed0.y;
+        if (textureCoordTransformed0.y > maxY) maxY = textureCoordTransformed0.y;
+
+        if (textureCoordTransformed1.x < minX) minX = textureCoordTransformed1.x;
+        if (textureCoordTransformed1.x > maxX) maxX = textureCoordTransformed1.x;
+        if (textureCoordTransformed1.y < minY) minY = textureCoordTransformed1.y;
+        if (textureCoordTransformed1.y > maxY) maxY = textureCoordTransformed1.y;
+
+        if (textureCoordTransformed2.x < minX) minX = textureCoordTransformed2.x;
+        if (textureCoordTransformed2.x > maxX) maxX = textureCoordTransformed2.x;
+        if (textureCoordTransformed2.y < minY) minY = textureCoordTransformed2.y;
+        if (textureCoordTransformed2.y > maxY) maxY = textureCoordTransformed2.y;
+
+        // now for each side of the triangle, compute the line vectors
+        Cartesian3 vector01 = textureCoordTransformed1 - textureCoordTransformed0;
+        Cartesian3 vector12 = textureCoordTransformed2 - textureCoordTransformed1;
+        Cartesian3 vector20 = textureCoordTransformed0 - textureCoordTransformed2;
+
+        // now compute the line normal vectors
+        Cartesian3 normal01(-vector01.y, vector01.x, 0.0);
+        Cartesian3 normal12(-vector12.y, vector12.x, 0.0);
+        Cartesian3 normal20(-vector20.y, vector20.x, 0.0);
+
+        // we don't need to normalise them, because the square roots will cancel out in the barycentric coordinates
+        float lineConstant01 = normal01.dot(textureCoordTransformed0);
+        float lineConstant12 = normal12.dot(textureCoordTransformed1);
+        float lineConstant20 = normal20.dot(textureCoordTransformed2);
+
+        // and compute the distance of each vertex from the opposing side
+        float distance0 = normal12.dot(textureCoordTransformed0) - lineConstant12;
+        float distance1 = normal20.dot(textureCoordTransformed1) - lineConstant20;
+        float distance2 = normal01.dot(textureCoordTransformed2) - lineConstant01;
+        if ((distance0 == 0) || (distance1 == 0) || (distance2 == 0))
+            continue;
+
+        Cartesian3 vertexNormal0 = triangleNormal.front();
+        triangleNormal.pop_front();
+        Cartesian3 vertexNormal1 = triangleNormal.front();
+        triangleNormal.pop_front();
+        Cartesian3 vertexNormal2 = triangleNormal.front();
+        triangleNormal.pop_front();
+        Cartesian3 normal0 = vertexNormal0.unit();
+        Cartesian3 normal1 = vertexNormal1.unit();
+        Cartesian3 normal2 = vertexNormal2.unit();
+
+        Cartesian3 colour0 = triangleColour.front();
+        triangleColour.pop_front();
+        Cartesian3 colour1 = triangleColour.front();
+        triangleColour.pop_front();
+        Cartesian3 colour2 = triangleColour.front();
+        triangleColour.pop_front();
+        //变幻到新的坐标系插值
+        for (int i = minY; i < maxY; ++i) {
+            for (int j = minX; j < maxX; ++j) {
+                Cartesian3 pixel(j, i, 0.0);
+
+                float alpha = (normal12.dot(pixel) - lineConstant12) / distance0;
+                float beta = (normal20.dot(pixel) - lineConstant20) / distance1;
+                float gamma = (normal01.dot(pixel) - lineConstant01) / distance2;
+
+                // now perform the half-plane test
+                if ((alpha < 0.0) || (beta < 0.0) || (gamma < 0.0))
+                    continue;
+
+                int interpU = alpha * textureCoordTransformed0.x + beta * textureCoordTransformed1.x + gamma * textureCoordTransformed2.x;
+                int interpV = alpha * textureCoordTransformed0.y + beta * textureCoordTransformed1.y + gamma * textureCoordTransformed2.y;
+
+                float red = alpha * colour0.x + beta * colour1.x + gamma * colour2.x;
+                float green = alpha * colour0.y + beta * colour1.y + gamma * colour2.y;
+                float blue = alpha * colour0.z + beta * colour1.z + gamma * colour2.z;
+                textureMap[interpU][interpV] = Cartesian3(red, green, blue);
+
+            }
+        }
+    }
+    std::ofstream file;
+    file.open("../texture.ppm");
+    file << "P3\n " << MAP_SIZE << " " << MAP_SIZE << " " << "\n255" << std::endl;
+
+    std::cout << MAP_SIZE << " " << MAP_SIZE;
+    for (int i = 0; i <MAP_SIZE; ++i) {
+        for (int j = 0; j <MAP_SIZE; ++j) {
+            unsigned int r = textureMap[i][j].x * 255;
+            r = max<unsigned int>(r,0);
+            r = min<unsigned int>(r,255);
+            unsigned int g = textureMap[i][j].y * 255;
+            g = max<unsigned int>(g,0);
+            g = min<unsigned int>(g,255);
+            unsigned int b = textureMap[i][j].z * 255;
+            b = max<unsigned int>(b,0);
+            b = min<unsigned int>(b,255);
+            file << r << ' ' << g << ' ' << b << '\n';
+        }
+
+    }
+    file.close();
+
+}
+
 
 // write routine
 void AttributedObject::WriteObjectStream(std::ostream &geometryStream)

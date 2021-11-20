@@ -44,29 +44,29 @@ int main(int argc, char **argv)
         } // bad arg count
 
     //  use the argument to create a height field &c.
-    AttributedObject AttributedObject;
+    AttributedObject attributedObject;
 
     // open the input files for the geometry & texture
     std::ifstream geometryFile(argv[1]);
 
     // try reading it
-    if (!(geometryFile.good()) || (!AttributedObject.ReadObjectStream(geometryFile)))
+    if (!(geometryFile.good()) || (!attributedObject.ReadObjectStream(geometryFile)))
         { // object read failed 
         std::cout << "Read failed for object " << argv[1] << std::endl;
         return 0;
         } // object read failed
 
     // dump the file to out
-//     AttributedObject.WriteObjectStream(std::cout);
-
+    attributedObject.WriteObjectStream(std::cout);
+    attributedObject.generateTexture();
     // create some default render parameters
     RenderParameters renderParameters;
 
     // use the object & parameters to create a window
-    RenderWindow renderWindow(&AttributedObject, &renderParameters, argv[1]);
+    RenderWindow renderWindow(&attributedObject, &renderParameters, argv[1]);
 
     // create a controller for the window
-    RenderController renderController(&AttributedObject, &renderParameters, &renderWindow);
+    RenderController renderController(&attributedObject, &renderParameters, &renderWindow);
 
     //  set the initial size
     renderWindow.resize(723, 580);
