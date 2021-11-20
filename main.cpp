@@ -57,7 +57,7 @@ int main(int argc, char **argv)
         } // object read failed
 
     // dump the file to out
-    attributedObject.WriteObjectStream(std::cout);
+//    attributedObject.WriteObjectStream(std::cout);
     attributedObject.generateTexture();
     // create some default render parameters
     RenderParameters renderParameters;
