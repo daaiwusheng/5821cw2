@@ -33,14 +33,21 @@
 #include <deque>
 #include <fstream>
 #include <algorithm>
-// include the Cartesian 3- vector class
 #include "Cartesian3.h"
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sstream>
+#include <stdlib.h>
+
 
 #define MAXIMUM_LINE_LENGTH 1024
 #define REMAP_TO_UNIT_INTERVAL(x) (0.5 + (0.5*(x)))
 #define REMAP_FROM_UNIT_INTERVAL(x) (-1.0 + (2.0*(x)))
 using namespace std;
 const int MAP_SIZE = 1024;
+
+
+
 
 // constructor will initialise to safe values
 AttributedObject::AttributedObject()
@@ -333,13 +340,15 @@ void AttributedObject::generateTexture() {
             }
         }
     }
+    ResultFileNames resultFileNames = this->generateNewFileName();
+
     std::ofstream fileTextureMap;
-    fileTextureMap.open("../texture.ppm");
+    fileTextureMap.open(resultFileNames.textureName);
     fileTextureMap << "P3\n " << MAP_SIZE << " " << MAP_SIZE << " " << "\n255" << std::endl;
     std::cout << MAP_SIZE << " " << MAP_SIZE;
 
     std::ofstream fileNormalMap;
-    fileNormalMap.open("../normal.ppm");
+    fileNormalMap.open(resultFileNames.normalMapName);
     fileNormalMap << "P3\n " << MAP_SIZE << " " << MAP_SIZE << " " << "\n255" << std::endl;
     std::cout << MAP_SIZE << " " << MAP_SIZE;
 
@@ -376,6 +385,39 @@ void AttributedObject::generateTexture() {
     delete[] normalMap;
 }
 
+/*!
+ * generate the new file name for texture.ppm and normalMap.ppm file
+ * @return ResultFileNames, a struct
+ */
+ResultFileNames AttributedObject::generateNewFileName()
+{
+    ResultFileNames result;
+    string newTextureFileDir = strdup("./textureMaps/");
+    string newNormalMapFileDir = strdup("./normalMaps/");
+    string newFileSuffix = strdup(".ppm");
+    string newTextureFileName = string();
+    string newNormalMapFileName = string();
+    string fileFullPath = this->filename;
+    string::size_type targetPosition = fileFullPath.find_last_of("/") + 1;
+    string file = fileFullPath.substr(targetPosition, fileFullPath.length() - targetPosition);
+
+    string objName = file.substr(0, file.rfind("."));
+
+    if (access(newTextureFileDir.c_str(), 0) == -1)	{
+        mkdir(newTextureFileDir.c_str(), 0777);
+    }
+
+    if (access(newNormalMapFileDir.c_str(), 0) == -1)	{
+        mkdir(newNormalMapFileDir.c_str(), 0777);
+    }
+
+    newTextureFileName = newTextureFileDir + objName + "_texture" + newFileSuffix;
+    newNormalMapFileName = newNormalMapFileDir + objName + "_normal" + newFileSuffix;
+    result.textureName = newTextureFileName;
+    result.normalMapName = newNormalMapFileName;
+
+    return result;
+}
 
 // write routine
 void AttributedObject::WriteObjectStream(std::ostream &geometryStream)

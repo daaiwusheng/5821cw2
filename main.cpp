@@ -45,7 +45,7 @@ int main(int argc, char **argv)
 
     //  use the argument to create a height field &c.
     AttributedObject attributedObject;
-
+    attributedObject.filename = argv[1];
     // open the input files for the geometry & texture
     std::ifstream geometryFile(argv[1]);
 

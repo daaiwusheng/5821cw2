@@ -39,6 +39,13 @@
 #include "Cartesian3.h"
 // the render parameters
 #include "RenderParameters.h"
+#include <string>
+
+
+typedef struct ResultFileNames{
+    std::string textureName;
+    std::string normalMapName;
+}ResultFileNames;
 
 // define a macro for "not used" flag
 //#define NO_SUCH_ELEMENT -1
@@ -50,6 +57,7 @@
 class AttributedObject
     { // class AttributedObject
     public:
+    char *filename; // store the .face filename,
     // vector of vertices
     std::vector<Cartesian3> vertices;
 
@@ -90,6 +98,7 @@ class AttributedObject
     void WriteObjectStream(std::ostream &geometryStream);
     // 输出texture
     void generateTexture();
+    ResultFileNames generateNewFileName();
     // routine to render
     void Render(RenderParameters *renderParameters);
     }; // class AttributedObject

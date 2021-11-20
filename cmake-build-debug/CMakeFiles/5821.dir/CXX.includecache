@@ -25,6 +25,14 @@ algorithm
 -
 Cartesian3.h
 /Users/wangyu/Desktop/利兹上课资料/9月份学期/图形学两门课/5821/作业2/5821研究/Cartesian3.h
+unistd.h
+-
+sys/stat.h
+-
+sstream
+-
+stdlib.h
+-
 
 /Users/wangyu/Desktop/利兹上课资料/9月份学期/图形学两门课/5821/作业2/5821研究/AttributedObject.h
 vector
@@ -39,6 +47,8 @@ Cartesian3.h
 /Users/wangyu/Desktop/利兹上课资料/9月份学期/图形学两门课/5821/作业2/5821研究/Cartesian3.h
 RenderParameters.h
 /Users/wangyu/Desktop/利兹上课资料/9月份学期/图形学两门课/5821/作业2/5821研究/RenderParameters.h
+string
+-
 
 /Users/wangyu/Desktop/利兹上课资料/9月份学期/图形学两门课/5821/作业2/5821研究/Cartesian3.h
 iostream
