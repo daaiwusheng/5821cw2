@@ -1,0 +1,4 @@
+/Users/wangyu/Desktop/利兹上课资料/9月份学期/图形学两门课/5821/作业2/5821研究/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/wangyu/Desktop/利兹上课资料/9月份学期/图形学两门课/5821/作业2/5821研究/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/wangyu/Desktop/利兹上课资料/9月份学期/图形学两门课/5821/作业2/5821研究/cmake-build-debug/CMakeFiles/5821.dir
+/Users/wangyu/Desktop/利兹上课资料/9月份学期/图形学两门课/5821/作业2/5821研究/cmake-build-debug/CMakeFiles/5821_autogen.dir
