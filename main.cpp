@@ -58,7 +58,7 @@ int main(int argc, char **argv)
 
     // dump the file to out
 //    attributedObject.WriteObjectStream(std::cout);
-    attributedObject.generateTexture();
+    attributedObject.generateTextureAndNormalMap();
     // create some default render parameters
     RenderParameters renderParameters;
 

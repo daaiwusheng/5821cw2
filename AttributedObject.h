@@ -41,7 +41,7 @@
 #include "RenderParameters.h"
 #include <string>
 
-
+//store two file names for returning two values in a function
 typedef struct ResultFileNames{
     std::string textureName;
     std::string normalMapName;
@@ -96,8 +96,9 @@ class AttributedObject
 
     // write routine
     void WriteObjectStream(std::ostream &geometryStream);
-    // 输出texture
-    void generateTexture();
+    // generate texture and normal map
+    void generateTextureAndNormalMap();
+    // generate texture file name and normal map file name
     ResultFileNames generateNewFileName();
     // routine to render
     void Render(RenderParameters *renderParameters);

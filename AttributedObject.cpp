@@ -220,18 +220,22 @@ bool AttributedObject::ReadObjectStream(std::istream &geometryStream)
     // return a success code
     return true;
 	} // ReadObjectStream()
-//生成texture
-void AttributedObject::generateTexture() {
-    unsigned int numFaces = faceVertices.size();
-    auto textureMap = new Cartesian3[MAP_SIZE][MAP_SIZE];
-    auto normalMap = new Cartesian3[MAP_SIZE][MAP_SIZE];
+/**!
+ * generate texture and normal map, all codes are in the function
+ *
+ */
+void AttributedObject::generateTextureAndNormalMap() {
+    //MAP_SIZE is 1024, store it in a variable is good, as we can change it without modifying other codes if we need to.
+    unsigned int numFaces = faceVertices.size(); //get the number of triangle faces
+    auto textureMap = new Cartesian3[MAP_SIZE][MAP_SIZE]; //create a 2 D array on heap memory, storing texture color data. As 1024 * 1024 is two big.
+    auto normalMap = new Cartesian3[MAP_SIZE][MAP_SIZE]; //create a 2 D array on heap memory, storing normal color data. As 1024 * 1024 is two big.
     for (unsigned int face = 0; face < numFaces; face+=3){
-        std::deque<Cartesian3> triangleTexture = std::deque<Cartesian3>();
-        std::deque<Cartesian3> triangleNormal = std::deque<Cartesian3>();
-        std::deque<Cartesian3> triangleColour = std::deque<Cartesian3>();
+        std::deque<Cartesian3> triangleTexture = std::deque<Cartesian3>(); //store texture u v for every triangle's vertexes
+        std::deque<Cartesian3> triangleNormal = std::deque<Cartesian3>(); //store normal coordinates for every triangle's vertexes
+        std::deque<Cartesian3> triangleColour = std::deque<Cartesian3>(); //store colours RGB for every triangle's vertexes
         for (unsigned int vertex = 0; vertex < 3; vertex++){
-            int indexTextureCoordinate = faceTexCoords[face + vertex];
-            //映射到纹理坐标系,交换u v,
+            int indexTextureCoordinate = faceTexCoords[face + vertex]; //get the index of texture coordinates of a vertex
+            //as uv in a texture map is inverse to uv in a model, so we exchange u v here, then we can use them later directly.
             Cartesian3 currentTexCoords = textureCoords[indexTextureCoordinate];
             Cartesian3 trueTexCoords = Cartesian3(currentTexCoords.y, currentTexCoords.x, currentTexCoords.z);
             triangleTexture.push_back(trueTexCoords);
@@ -240,7 +244,7 @@ void AttributedObject::generateTexture() {
             int indexColour = faceColours[face + vertex];
             triangleColour.push_back(colours[indexColour]);
         }
-
+        //project uv to 1024 * 1024 coordinate space.
         Cartesian3 textureCoordTransformed0 = triangleTexture.front();
         textureCoordTransformed0.x = textureCoordTransformed0.x * MAP_SIZE;
         textureCoordTransformed0.y = textureCoordTransformed0.y * MAP_SIZE;
@@ -253,6 +257,7 @@ void AttributedObject::generateTexture() {
         textureCoordTransformed2.x = textureCoordTransformed2.x * MAP_SIZE;
         textureCoordTransformed2.y = textureCoordTransformed2.y * MAP_SIZE;
         triangleTexture.pop_front();
+        // calculate the distance for a vertex to the opposing side, just use the code from 5812 cw1
         float minX = MAP_SIZE, maxX = 0.0;
         float minY = MAP_SIZE, maxY = 0.0;
 
@@ -300,7 +305,9 @@ void AttributedObject::generateTexture() {
         triangleNormal.pop_front();
         Cartesian3 vertexNormal2 = triangleNormal.front();
         triangleNormal.pop_front();
+
         Cartesian3 normalProject = Cartesian3(0.5,0.5,0.5);
+        //project normal vector to 0-1
         Cartesian3 normal0 = vertexNormal0.unit() * 0.5 + normalProject;
         Cartesian3 normal1 = vertexNormal1.unit() * 0.5 + normalProject;
         Cartesian3 normal2 = vertexNormal2.unit() * 0.5 + normalProject;
@@ -311,7 +318,7 @@ void AttributedObject::generateTexture() {
         triangleColour.pop_front();
         Cartesian3 colour2 = triangleColour.front();
         triangleColour.pop_front();
-        //变幻到新的坐标系插值
+        //do barycentric coordinate interpolation for texture map and normal map
         for (int i = minY; i <= maxY; ++i) {
             if (i >= MAP_SIZE || i<0) continue;
 
@@ -319,7 +326,7 @@ void AttributedObject::generateTexture() {
                 if (j >= MAP_SIZE || j<0) continue;
 
                 Cartesian3 pixel(j, i, 0.0);
-
+                //calculate α β γ
                 float alpha = (normal12.dot(pixel) - lineConstant12) / distance0;
                 float beta = (normal20.dot(pixel) - lineConstant20) / distance1;
                 float gamma = (normal01.dot(pixel) - lineConstant01) / distance2;
@@ -331,27 +338,28 @@ void AttributedObject::generateTexture() {
                 float red = alpha * colour0.x + beta * colour1.x + gamma * colour2.x;
                 float green = alpha * colour0.y + beta * colour1.y + gamma * colour2.y;
                 float blue = alpha * colour0.z + beta * colour1.z + gamma * colour2.z;
-                textureMap[j][i] = Cartesian3(red, green, blue);
+                textureMap[j][i] = Cartesian3(red, green, blue); //store the texture colour in textureMap
 
                 float redNormal = alpha * normal0.x + beta * normal1.x + gamma * normal2.x;
                 float greenNormal = alpha * normal0.y + beta * normal1.y + gamma * normal2.y;
                 float blueNormal = alpha * normal0.z + beta * normal1.z + gamma * normal2.z;
-                normalMap[j][i] = Cartesian3(redNormal, greenNormal, blueNormal);
+                normalMap[j][i] = Cartesian3(redNormal, greenNormal, blueNormal); //store the texture colour in normalMap
             }
         }
     }
+    //get the new file name
     ResultFileNames resultFileNames = this->generateNewFileName();
 
     std::ofstream fileTextureMap;
     fileTextureMap.open(resultFileNames.textureName);
     fileTextureMap << "P3\n " << MAP_SIZE << " " << MAP_SIZE << " " << "\n255" << std::endl;
-    std::cout << MAP_SIZE << " " << MAP_SIZE;
+
 
     std::ofstream fileNormalMap;
     fileNormalMap.open(resultFileNames.normalMapName);
     fileNormalMap << "P3\n " << MAP_SIZE << " " << MAP_SIZE << " " << "\n255" << std::endl;
-    std::cout << MAP_SIZE << " " << MAP_SIZE;
 
+    //write ppm files
     for (int i = 0; i <MAP_SIZE; ++i) {
         for (int j = 0; j <MAP_SIZE; ++j) {
             unsigned int r = textureMap[i][j].x * 255;
@@ -381,8 +389,16 @@ void AttributedObject::generateTexture() {
     }
     fileTextureMap.close();
     fileNormalMap.close();
+    //we need delete the memory when we use heap memory
     delete[] textureMap;
     delete[] normalMap;
+
+    if (access(resultFileNames.textureName.c_str(),0) != -1){
+        cout<<"successfully generate texture ppm."<<endl;
+    }
+    if (access(resultFileNames.normalMapName.c_str(),0) != -1){
+        cout<<"successfully generate normal map ppm."<<endl;
+    }
 }
 
 /*!
