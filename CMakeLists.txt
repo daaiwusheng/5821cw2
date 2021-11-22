@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 project(5821)
 
 set(CMAKE_CXX_STANDARD 11)
+set(CXX_FLAGS -std=c++11)
 
 # 添加头文件
 set(GLEW_H /usr/local/Cellar/glew/2.2.0_1/include/GL)

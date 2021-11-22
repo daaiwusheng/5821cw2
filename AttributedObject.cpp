@@ -30,6 +30,7 @@
 #include <iomanip>
 #include <sstream>
 #include <string>
+#include "string.h"
 #include <deque>
 #include <fstream>
 #include <algorithm>
@@ -227,8 +228,9 @@ bool AttributedObject::ReadObjectStream(std::istream &geometryStream)
 void AttributedObject::generateTextureAndNormalMap() {
     //MAP_SIZE is 1024, store it in a variable is good, as we can change it without modifying other codes if we need to.
     unsigned int numFaces = faceVertices.size(); //get the number of triangle faces
-    auto textureMap = new Cartesian3[MAP_SIZE][MAP_SIZE]; //create a 2 D array on heap memory, storing texture color data. As 1024 * 1024 is two big.
-    auto normalMap = new Cartesian3[MAP_SIZE][MAP_SIZE]; //create a 2 D array on heap memory, storing normal color data. As 1024 * 1024 is two big.
+    Cartesian3 (*textureMap)[MAP_SIZE] = new Cartesian3[MAP_SIZE][MAP_SIZE]; //create a 2 D array on heap memory, storing texture color data. As 1024 * 1024 is two big.
+    Cartesian3 (*normalMap)[MAP_SIZE] = new Cartesian3[MAP_SIZE][MAP_SIZE]; //create a 2 D array on heap memory, storing normal color data. As 1024 * 1024 is two big.
+
     for (unsigned int face = 0; face < numFaces; face+=3){
         std::deque<Cartesian3> triangleTexture = std::deque<Cartesian3>(); //store texture u v for every triangle's vertexes
         std::deque<Cartesian3> triangleNormal = std::deque<Cartesian3>(); //store normal coordinates for every triangle's vertexes
